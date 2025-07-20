@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13.21-alpine3.21
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: dudung
+      POSTGRES_PASSWORD: dudung123
+      POSTGRES_DB: dudungdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+
