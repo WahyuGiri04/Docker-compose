@@ -1,17 +1,20 @@
-# version: '3.8'
+# version: '3.9'
+
 services:
   db:
     image: datagrip/greenplum:6.8
     container_name: greenplum-db
     environment:
-      POSTGRES_USER: dudung
-      POSTGRES_PASSWORD: dudung123
-      POSTGRES_DB: dudungdb
+      GP_USER: tester
+      GP_PASSWORD: pivotal
+      GP_DATABASE: testdb
+      GP_DB: testdb
     ports:
-      - "5432:5432"
+      - "6432:5432"
     volumes:
-      - pgdata:/var/lib/greenplum/data
+      - greenplum-data:/data
+    restart: unless-stopped
 
 volumes:
-  pgdata:
-
+  greenplum-data:
+    driver: local

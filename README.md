@@ -1,8 +1,8 @@
 # Docker Compose Service Catalog
 
-![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) ![Greenplum](https://img.shields.io/badge/Greenplum-00693C?style=for-the-badge&logoColor=white)
 
-Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pengembangan. Saat ini tersedia database PostgreSQL dan MySQL, dan repo ini siap diperluas ke layanan lain seperti Consul, Redis, atau message broker.
+Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pengembangan. Saat ini tersedia database PostgreSQL, MySQL, dan Greenplum, dan repo ini siap diperluas ke layanan lain seperti Consul, Redis, atau message broker.
 
 ---
 
@@ -10,7 +10,7 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 
 - Docker Engine 20.10+ sudah terinstal.
 - Plugin Docker Compose v2 tersedia (`docker compose version`).
-- Port default 5432 (PostgreSQL) dan 3306 (MySQL) tidak dipakai aplikasi lain.
+- Port default 5432 (PostgreSQL), 3306 (MySQL), dan 6432 (Greenplum) tidak dipakai aplikasi lain.
 
 ---
 
@@ -20,6 +20,7 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 | --- | --- | --- | --- | --- | --- |
 | ![PostgreSQL Badge](https://img.shields.io/badge/-PostgreSQL-316192?logo=postgresql&logoColor=white) | Database | `docker-compose-postgres.yml` | `5432` | user: `dudung`<br>password: `dudung123`<br>database: `dudungdb` | `pgdata` |
 | ![MySQL Badge](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white) | Database | `docker-compose-mysql.yml` | `3306` | root password: `root` | `mysqldata` |
+| Greenplum | Database MPP | `docker-compose-greenplum-db.yml` | `6432` | user: `tester`<br>password: `pivotal`<br> database: `testdb` | `greenplum-data` |
 
 > Volume memastikan data bertahan walau kontainer dihentikan. Hapus volume hanya jika kamu ingin memulai dari nol.
 
@@ -31,7 +32,7 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 docker compose -f docker-compose-postgres.yml up -d
 ```
 
-1. Ganti nama file dengan layanan pilihan (`postgres` atau `mysql`).
+1. Ganti nama file dengan layanan pilihan (`postgres`, `mysql`, atau `greenplum-db`).
 2. Tunggu kontainer running, lalu sambung menggunakan klien SQL favoritmu.
 3. Gunakan `docker ps` atau `docker compose -f <file> ps` untuk memeriksa status.
 
@@ -46,13 +47,13 @@ docker compose -f docker-compose-postgres.yml up -d
 | Hentikan dan lepaskan kontainer | `docker compose -f <file> down` |
 | Hentikan & hapus volume | `docker compose -f <file> down -v` |
 
-> Ganti `<file>` dengan `docker-compose-postgres.yml` atau `docker-compose-mysql.yml`.
+> Ganti `<file>` dengan `docker-compose-postgres.yml`, `docker-compose-mysql.yml`, atau `docker-compose-greenplum-db.yml`.
 
 ---
 
 ## Penyesuaian
 
-- Ganti kredensial di bagian `environment` sebelum menjalankan pertama kali.
+- Ganti kredensial di bagian `environment` (mis. `GP_USER`, `GP_PASSWORD`, `GP_DB`) sebelum menjalankan pertama kali.
 - Sesuaikan mapping port pada blok `ports` bila bentrok dengan layanan lain.
 - Tambahkan file `.env` untuk menyimpan nilai sensitif, lalu referensikan pada compose file.
 - Gunakan `docker volume ls` dan `docker volume inspect <volume>` untuk melihat lokasi penyimpanan data.
