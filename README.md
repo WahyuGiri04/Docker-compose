@@ -20,7 +20,8 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 | --- | --- | --- | --- | --- | --- |
 | ![PostgreSQL Badge](https://img.shields.io/badge/-PostgreSQL-316192?logo=postgresql&logoColor=white) | Database | `docker-compose-postgres.yml` | `5432` | user: `dudung`<br>password: `dudung123`<br>database: `dudungdb` | `pgdata` |
 | ![MySQL Badge](https://img.shields.io/badge/-MySQL-4479A1?logo=mysql&logoColor=white) | Database | `docker-compose-mysql.yml` | `3306` | root password: `root` | `mysqldata` |
-| Greenplum | Database MPP | `docker-compose-greenplum-db.yml` | `6432` | user: `tester`<br>password: `pivotal`<br> database: `testdb` | `greenplum-data` |
+| Greenplum 6.x | Database MPP | `docker-compose-greenplum-db.yml` | `6432` | user: `tester`<br>password: `pivotal`<br> database: `testdb` | `greenplum-data` |
+| Greenplum 7.x | Database MPP | `docker-compose-greenplum-db-v7.yml` | `6432` | user: `gpadmin`<br>password: `postgres`<br> database: `postgres` | `greenplum-data` |
 
 > Volume memastikan data bertahan walau kontainer dihentikan. Hapus volume hanya jika kamu ingin memulai dari nol.
 
@@ -29,12 +30,13 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 ## Cara Cepat
 
 ```bash
-docker compose -f docker-compose-postgres.yml up -d
+docker compose -p postgres -f docker-compose-postgres.yml up -d
 ```
 
-1. Ganti nama file dengan layanan pilihan (`postgres`, `mysql`, atau `greenplum-db`).
+1. Ganti nama file dengan layanan pilihan (`postgres`, `mysql`, `greenplum-db`, atau `greenplum-db-v7`).
 2. Tunggu kontainer running, lalu sambung menggunakan klien SQL favoritmu.
 3. Gunakan `docker ps` atau `docker compose -f <file> ps` untuk memeriksa status.
+4. Bila ingin menjalankan beberapa layanan database sekaligus (mis. PostgreSQL + Greenplum), pakai flag `-p <nama-project>` berbeda untuk tiap file agar network & volume terpisah.
 
 ---
 
@@ -42,18 +44,18 @@ docker compose -f docker-compose-postgres.yml up -d
 
 | Tujuan | Perintah |
 | --- | --- |
-| Jalankan dalam mode detached | `docker compose -f <file> up -d` |
-| Lihat log berjalan | `docker compose -f <file> logs -f` |
-| Hentikan dan lepaskan kontainer | `docker compose -f <file> down` |
-| Hentikan & hapus volume | `docker compose -f <file> down -v` |
+| Jalankan dalam mode detached | `docker compose -p <project> -f <file> up -d` |
+| Lihat log berjalan | `docker compose -p <project> -f <file> logs -f` |
+| Hentikan dan lepaskan kontainer | `docker compose -p <project> -f <file> down` |
+| Hentikan & hapus volume | `docker compose -p <project> -f <file> down -v` |
 
-> Ganti `<file>` dengan `docker-compose-postgres.yml`, `docker-compose-mysql.yml`, atau `docker-compose-greenplum-db.yml`.
+> Ganti `<file>` dengan `docker-compose-postgres.yml`, `docker-compose-mysql.yml`, `docker-compose-greenplum-db.yml`, atau `docker-compose-greenplum-db-v7.yml`. `project` adalah nama bebas (mis. `postgres`, `greenplum7`) dan wajib unik saat beberapa layanan berjalan bersamaan.
 
 ---
 
 ## Penyesuaian
 
-- Ganti kredensial di bagian `environment` (mis. `GP_USER`, `GP_PASSWORD`, `GP_DB`) sebelum menjalankan pertama kali.
+- Ganti kredensial di bagian `environment` (mis. `GP_USER`, `GP_PASSWORD`, `GP_DB`) sebelum menjalankan pertama kali. Pilih file compose yang sesuai versi Greenplum yang ingin dipakai (6.x vs 7.x).
 - Sesuaikan mapping port pada blok `ports` bila bentrok dengan layanan lain.
 - Tambahkan file `.env` untuk menyimpan nilai sensitif, lalu referensikan pada compose file.
 - Gunakan `docker volume ls` dan `docker volume inspect <volume>` untuk melihat lokasi penyimpanan data.

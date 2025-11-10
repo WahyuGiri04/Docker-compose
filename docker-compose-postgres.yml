@@ -1,6 +1,7 @@
-# version: '3.8'
+# version: '3.9'
+
 services:
-  db:
+  postgres:
     image: postgres:13.21-alpine3.21
     container_name: postgres-db
     environment:
@@ -11,7 +12,13 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    command: ["postgres", "-c", "unix_socket_directories=/var/run/postgresql"]
+    networks:
+      - pgnet
 
 volumes:
   pgdata:
 
+networks:
+  pgnet:
+    name: pgnet

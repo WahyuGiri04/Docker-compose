@@ -1,0 +1,28 @@
+# version: '3.9'
+
+services:
+  greenplum:
+    image: andruche/greenplum:7
+    container_name: greenplum-db
+    environment:
+      GP_USER: gpadmin
+      GP_PASSWORD: postgres
+      GP_DATABASE: postgres
+      GP_DB: postgres
+      PGPORT: 6432
+      PGHOST: /tmp/greenplum
+    ports:
+      - "6432:5432"  # Host port 6432, container port 5432
+    volumes:
+      - greenplum-data:/data
+    restart: unless-stopped
+    networks:
+      - gpnet
+
+volumes:
+  greenplum-data:
+    driver: local
+
+networks:
+  gpnet:
+    name: gpnet
