@@ -3,8 +3,8 @@ services:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     container_name: oracle-db-21c
     ports:
-      - "1521:1521" # Host port 1521, container port 1521
-      - "5500:5500"
+      - "1523:1521" # Host port 1523, container port 1521
+      - "5501:5500"
     environment:
       DB_SID: ORCL
       ORACLE_PWD: sapassword
