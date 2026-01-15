@@ -1,0 +1,23 @@
+services:
+  oracle-db-21c:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: oracle-db-21c
+    ports:
+      - "1521:1521" # Host port 1521, container port 1521
+      - "5500:5500"
+    environment:
+      DB_SID: ORCL
+      ORACLE_PWD: sapassword
+      DB_PDB: ORAGIRIPDB
+      DB_DOMAIN: oracledb.giri.local
+      ENABLE_ARCHIVELOG: "true"
+    volumes:
+      - oracle-data-21c:/opt/oracle/oradata
+      - oracle-backup-21c:/opt/oracle/backup
+    restart: unless-stopped
+
+volumes:
+  oracle-data-21c:
+    driver: local
+  oracle-backup-21c:
+    driver: local
