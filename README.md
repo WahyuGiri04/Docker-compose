@@ -56,6 +56,59 @@ docker compose -p postgres -f docker-compose-postgres.yml up -doracle-12c`, `ora
 
 ---
 
+## Catatan Khusus Oracle
+
+Beberapa perintah umum untuk mengelola database Oracle setelah kontainer berjalan:
+
+1.  **Masuk ke SQL*Plus:**
+
+    ```bash
+    docker exec -it oracle_db bash -c "source /home/oracle/.bashrc; sqlplus /nolog"
+    ```
+    Ganti `oracle_db` dengan nama kontainer Oracle jika berbeda (cek dengan `docker ps`).
+
+2.  **Koneksi sebagai SYSDBA:**
+    Setelah masuk ke SQL*Plus, sambungkan sebagai user `sys`.
+
+    ```sql
+    connect sys as sysdba;
+    ```
+    Saat diminta password, masukkan password yang diset pada file `docker-compose` (mis. `sapassword`).
+
+3.  **Mengganti Password `SYS`:**
+    Sangat disarankan untuk mengganti password default.
+
+    ```sql
+    ALTER USER sys IDENTIFIED BY password_baru;
+    ```
+
+4.  **Mengaktifkan Script untuk Membuat User Baru (jika perlu):**
+
+    ```sql
+    alter session set "_ORACLE_SCRIPT"=true;
+    ```
+
+5.  **Membuat Schema/User Baru:**
+
+    ```sql
+    create user db_user identified by db_user_pass;
+    GRANT ALL PRIVILEGES TO db_user;
+    ```
+
+6.  **Menghapus Schema/User:**
+
+    ```sql
+    DROP USER NAMA_USER CASCADE;
+    ```
+
+7.  **Melihat Services yang Berjalan:**
+
+    ```sql
+    SELECT name FROM v$services;
+    ```
+
+---
+
 ## Penyesuaian
 
 - Ganti kredensial di bagian `environment` (mis. `GP_USER`, `GP_PASSWORD`, `GP_DB`) sebelum menjalankan pertama kali. Pilih file compose yang sesuai versi Greenplum yang ingin dipakai (6.x vs 7.x).
