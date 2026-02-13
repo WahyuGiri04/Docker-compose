@@ -133,3 +133,7 @@ Beberapa perintah umum untuk mengelola database Oracle setelah kontainer berjala
 - Nonaktifkan layanan yang tidak digunakan dengan `down` agar resource tidak terpakai.
 - Simpan catatan koneksi (host, port, user, password) di password manager supaya mudah dibagikan ke tim.
 - Pisahkan file compose untuk tiap lingkungan (dev/staging/prod) agar konfigurasi khusus tidak tercampur.
+
+
+## Link Image Oracle
+- https://container-registry.oracle.com/
