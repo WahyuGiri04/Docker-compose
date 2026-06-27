@@ -1,0 +1,18 @@
+{
+  "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
+  "tasks.max": "1",
+  "connection.url": "jdbc:mysql://mysql-db-v8:3306/slave_data",
+  "connection.username": "root",
+  "connection.password": "root",
+  "topics": "pg_server.master_data.m_transaction_data",
+  "insert.mode": "upsert",
+  "primary.key.mode": "record_value",
+  "primary.key.fields": "uuid",
+  "schema.evolution": "none",
+  "transforms": "unwrap,routeToSub",
+  "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+  "transforms.unwrap.drop.tombstones": "true",
+  "transforms.routeToSub.type": "org.apache.kafka.connect.transforms.RegexRouter",
+  "transforms.routeToSub.regex": ".*m_transaction_data",
+  "transforms.routeToSub.replacement": "s_transaction_data"
+}
