@@ -2,21 +2,22 @@
   "name": "mysql-sink-connector",
   "config": {
     "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
-    "tasks.max": "1",
+    "tasks.max": "4",
     "connection.url": "jdbc:mysql://mysql-db-v8:3306/slave_data",
     "connection.username": "root",
     "connection.password": "root",
-    
     "topics": "pg_server.master_data.m_transaction_data",
-    
-    "insert.mode": "insert",
+    "insert.mode": "upsert",
+    "primary.key.mode": "record_value",
+    "primary.key.fields": "uuid",
     "schema.evolution": "none",
-    "primary.key.mode": "none",
-
+    "batch.size": "3000",
+    "consumer.override.max.poll.records": "3000",
+    "max.retries": "10",
+    "retry.backoff.ms": "3000",
     "transforms": "unwrap,routeToSub",
     "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
     "transforms.unwrap.drop.tombstones": "true",
-    
     "transforms.routeToSub.type": "org.apache.kafka.connect.transforms.RegexRouter",
     "transforms.routeToSub.regex": ".*m_transaction_data",
     "transforms.routeToSub.replacement": "s_transaction_data"
