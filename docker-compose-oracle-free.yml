@@ -1,7 +1,7 @@
 services:
-  oracle-db-19c:
-    image: container-registry.oracle.com/database/enterprise:19.3.0.0
-    container_name: oracle-db-19c
+  oracle-db-free:
+    image: container-registry.oracle.com/database/free:latest
+    container_name: oracle-db-free
     ports:
       - "1521:1521" # Host port 1522, container port 1521
       - "5500:5500"
@@ -12,12 +12,12 @@ services:
       DB_DOMAIN: oracledb.giri.local
       ENABLE_ARCHIVELOG: "true"
     volumes:
-      - oracle-data-19c:/opt/oracle/oradata
-      - oracle-backup-19c:/opt/oracle/backup
+      - oracle-data-free:/opt/oracle/oradata
+      - oracle-backup-free:/opt/oracle/backup
     restart: unless-stopped
 
 volumes:
-  oracle-data-19c:
+  oracle-data-free:
     driver: local
-  oracle-backup-19c:
+  oracle-backup-free:
     driver: local
