@@ -30,6 +30,29 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 
 ---
 
+## Login 9Router
+
+Jika login menampilkan pesan `Default password must be changed before remote access`,
+atur password awal yang kuat sebelum membuat ulang kontainer:
+
+```bash
+read -rs -p "Password awal 9Router: " INITIAL_PASSWORD
+echo
+export INITIAL_PASSWORD
+docker compose -f docker-compose-9router.yml up -d
+unset INITIAL_PASSWORD
+```
+
+Login menggunakan password tersebut. Jangan gunakan password default `123456`.
+`INITIAL_PASSWORD` hanya berlaku jika belum ada password yang tersimpan di data
+9Router; menggantinya tidak mereset password yang sudah tersimpan. Jika kontainer
+dibuat ulang sebelum password disimpan melalui dashboard, atur kembali variabel
+tersebut dengan nilai yang sama. Password dalam environment kontainer dapat
+dilihat oleh pengguna yang memiliki akses Docker. Jangan hapus volume untuk
+mengatasi masalah login karena semua data 9Router akan ikut terhapus.
+
+---
+
 ## Cara Cepat
 
 ```bash
