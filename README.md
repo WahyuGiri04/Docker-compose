@@ -2,7 +2,7 @@
 
 ![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white) ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white) ![Greenplum](https://img.shields.io/badge/Greenplum-00693C?style=for-the-badge&logoColor=white)
 
-Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pengembangan. Saat ini tersedia database PostgreSQL, MySQL, Oracle, dan Greenplum, dan repo ini siap diperluas ke layanan lain seperti Consul, Redis, atau message broker.
+Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pengembangan. Saat ini tersedia database PostgreSQL, MySQL, Oracle, Greenplum, Consul, 9Router, serta Redis, dan repo ini siap diperluas ke layanan lain.
 
 ---
 
@@ -10,7 +10,7 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 
 - Docker Engine 20.10+ sudah terinstal.
 - Plugin Docker Compose v2 tersedia (`docker compose version`).
-- Port default 5432 (PostgreSQL), 3306 (MySQL), 1521 (Oracle), dan 6432 (Greenplum) tidak dipakai aplikasi lain.
+- Port default 5432 (PostgreSQL), 3306 (MySQL), 1521 (Oracle), 6432 (Greenplum), 8500 (Consul), 20128 (9Router), 6379 (Redis), dan 5540 (RedisInsight) tidak dipakai aplikasi lain.
 
 ---
 
@@ -25,6 +25,7 @@ Koleksi file Docker Compose untuk meluncurkan layanan yang umum dipakai dalam pe
 | ![Oracle Badge](https://img.shields.io/badge/-Oracle_21c-F80000?logo=oracle&logoColor=white) | Database | `docker-compose-oracle-21c.yml` | `1521` | password: `sapassword`<br>SID: `ORCL`<br>PDB: `ORAGIRIPDB` | `oracle-data-21c` |
 | Greenplum 6.x | Database MPP | `docker-compose-greenplum-db.yml` | `6432` | user: `tester`<br>password: `pivotal`<br> database: `testdb` | `greenplum-data` |
 | Greenplum 7.x | Database MPP | `docker-compose-greenplum-db-v7.yml` | `6432` | user: `gpadmin`<br>password: `postgres`<br> database: `postgres` | `greenplum-data` |
+| ![Redis Badge](https://img.shields.io/badge/-Redis-DC382D?logo=redis&logoColor=white) | Cache / Data Store | `docker-compose-redis.yml` | `6379` (Redis), `5540` (RedisInsight) | password: `redis123` | `redisdata`, `redisinsight-data` |
 
 > Volume memastikan data bertahan walau kontainer dihentikan. Hapus volume hanya jika kamu ingin memulai dari nol.
 
@@ -53,14 +54,29 @@ mengatasi masalah login karena semua data 9Router akan ikut terhapus.
 
 ---
 
+## Akses RedisInsight
+
+Setelah `docker-compose-redis.yml` dijalankan, buka `http://localhost:5540` di browser.
+
+Tambahkan koneksi Redis dengan data berikut:
+
+- **Host**: `redis`
+- **Port**: `6379`
+- **Password**: `redis123`
+- **Name**: bebas (mis. `local-redis`)
+
+> Gunakan host `redis` karena RedisInsight berjalan dalam network Docker Compose yang sama. Jika menghubungkan dari mesin host di luar network Compose tersebut, gunakan `localhost`.
+
+---
+
 ## Cara Cepat
 
 ```bash
 docker compose -p postgres -f docker-compose-postgres.yml up -doracle-12c`, `oracle-19c`, `oracle-21c`, `
 ```
 
-1. Ganti nama file dengan layanan pilihan (`postgres`, `mysql`, `greenplum-db`, atau `greenplum-db-v7`).
-2. Tunggu kontainer running, lalu sambung menggunakan klien SQL favoritmu.
+1. Ganti nama file dengan layanan pilihan (`postgres`, `mysql`, `greenplum-db`, `greenplum-db-v7`, atau `redis`).
+2. Tunggu kontainer running, lalu sambung menggunakan klien favoritmu (SQL client untuk database, `redis-cli` untuk Redis).
 3. Gunakan `docker ps` atau `docker compose -f <file> ps` untuk memeriksa status.
 4. Bila ingin menjalankan beberapa layanan database sekaligus (mis. PostgreSQL + Greenplum), pakai flag `-p <nama-project>` berbeda untuk tiap file agar network & volume terpisah.
 

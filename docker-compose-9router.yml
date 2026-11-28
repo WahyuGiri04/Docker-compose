@@ -11,7 +11,7 @@ services:
       DATA_DIR: /app/data
       PORT: "20128"
       HOSTNAME: "0.0.0.0"
-      INITIAL_PASSWORD: mii123
+      INITIAL_PASSWORD: Sujito123
 
 volumes:
   9router-data:
